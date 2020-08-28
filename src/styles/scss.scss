@@ -1,0 +1,95 @@
+@import "~normalize.css";
+
+// variables ---
+
+$black: #000;
+$white: #fff;
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+*,
+*::after,
+*::before,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  font-family: sans-serif; // Check if it works on mobile ,
+  // font-weight: 400;
+  // font-size: 16px;
+  // color: $white;
+
+  // min-width: 320px;
+}
+
+.container {
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  // transform: translateY(-100px);
+  touch-action: none;
+}
+
+.transitioned {
+  transition: all 500ms cubic-bezier(0.38, 0.09, 0.43, 1.18) 0s;
+}
+
+.section {
+  height: 100vh;
+  max-width: 100%;
+
+  &__1 {
+    background-color: orange;
+  }
+
+  &__2 {
+    background-color: green;
+  }
+
+  &__3 {
+    background-color: red;
+  }
+}
+
+.slider-container {
+  overflow: hidden;
+}
+
+.slider-track {
+  width: 300%;
+  display: flex;
+}
+
+.slider-item {
+  height: 100vh;
+  width: 100%;
+  transform: translateX(-100px);
+  &__1 {
+    background-color: orchid;
+  }
+
+  &__2 {
+    background-color: palegreen;
+  }
+
+  &__3 {
+    background-color: maroon;
+  }
+}
