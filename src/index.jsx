@@ -24,11 +24,22 @@ let touchPosY = null;
 
 let initPosY = 0;
 
+const sectionHeight = "100vh";
+
 const sections = document.querySelectorAll(".section");
 
+for (let section of sections) {
+  section.style.height = sectionHeight;
+}
+
 const calculatePos = () => {
-  let width = document.documentElement.clientWidth;
-  let height = document.documentElement.clientHeight;
+  /* let width = document.documentElement.clientWidth;
+  let height = document.documentElement.clientHeight; */
+
+  let styles = window.getComputedStyle(sections[0]);
+
+  let width = parseInt(styles.getPropertyValue("width").replace(/px/, ""));
+  let height = parseInt(styles.getPropertyValue("height").replace(/px/, ""));
 
   for (let section of sections) {
     let width_i = window.getComputedStyle(section).getPropertyValue("width");
