@@ -55,6 +55,10 @@ body {
   height: 100vh;
   max-width: 100%;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &__1 {
     background-color: orange;
   }

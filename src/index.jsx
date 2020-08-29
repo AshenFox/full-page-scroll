@@ -24,9 +24,18 @@ let touchPosY = null;
 
 let initPosY = 0;
 
+const sections = document.querySelectorAll(".section");
+
 const calculatePos = () => {
   let width = document.documentElement.clientWidth;
   let height = document.documentElement.clientHeight;
+
+  for (let section of sections) {
+    let width_i = window.getComputedStyle(section).getPropertyValue("width");
+    let height_i = window.getComputedStyle(section).getPropertyValue("height");
+
+    section.innerHTML = `clientWidth: ${width} / clientHeight: ${height} <br/> width: ${width_i} / height: ${height_i}`;
+  }
 
   return {
     heightOffset: height * (currentSection - 1),
