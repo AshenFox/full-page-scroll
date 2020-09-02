@@ -81,6 +81,17 @@ const FullPageSroll = ({
       : `translate3D(0px, ${contPosY + offsetY}px, 0px)`,
   };
 
+  let obj = {
+    documentHeight: document.documentElement.clientHeight,
+    documentWidth: document.documentElement.clientWidth,
+  };
+  if (section.current) {
+    obj = {
+      ...obj,
+      ...getElementDimensions(section.current),
+    };
+  }
+
   return (
     <div
       className='container'
@@ -106,8 +117,18 @@ const FullPageSroll = ({
         ref={content}
         style={style}
       >
-        <Section className='section section__1' ref={section} />
-        <Section className='section section__2' />
+        <Section className='section section__1' ref={section}>
+          <p>documentHeight: {obj.documentHeight}</p>
+          <p>documentWidth: {obj.documentWidth}</p>
+          <p>height: {obj.height}</p>
+          <p>width: {obj.width}</p>
+        </Section>
+        <Section className='section section__2'>
+          <p>documentHeight: {obj.documentHeight}</p>
+          <p>documentWidth: {obj.documentWidth}</p>
+          <p>height: {obj.height}</p>
+          <p>width: {obj.width}</p>
+        </Section>
         <Section className='section section__3'>
           <Slider />
         </Section>
@@ -140,3 +161,12 @@ export default connect(mapStateToProps, {
   setSection,
   resetY,
 })(FullPageSroll);
+
+const getElementDimensions = (el) => {
+  let styles = window.getComputedStyle(el);
+
+  return {
+    width: parseInt(styles.getPropertyValue("width").replace(/px/, "")),
+    height: parseInt(styles.getPropertyValue("height").replace(/px/, "")),
+  };
+};
