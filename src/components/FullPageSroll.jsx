@@ -29,7 +29,15 @@ const FullPageSroll = ({
   resetY,
   setScreenDimensions,
 }) => {
-  const { isDown, contPosY, offsetY, offsetAxis, isHorMovable } = main;
+  const {
+    isDown,
+    contPosY,
+    offsetY,
+    offsetAxis,
+    isHorMovable,
+    screenHeight,
+    screenWidth,
+  } = main;
 
   const content = useRef(null);
   const section = useRef(null);
@@ -85,7 +93,7 @@ const FullPageSroll = ({
       : `translate3D(0px, ${contPosY + offsetY}px, 0px)`,
   };
 
-  /* let obj = {
+  let obj = {
     documentHeight: document.documentElement.clientHeight,
     documentWidth: document.documentElement.clientWidth,
   };
@@ -94,7 +102,7 @@ const FullPageSroll = ({
       ...obj,
       ...getElementDimensions(section.current),
     };
-  } */
+  }
 
   return (
     <div
@@ -121,8 +129,22 @@ const FullPageSroll = ({
         ref={content}
         style={style}
       >
-        <Section className='section section__1' ref={section}></Section>
-        <Section className='section section__2'></Section>
+        <Section className='section section__1' ref={section}>
+          <p>documentHeight: {obj.documentHeight}</p>
+          <p>documentWidth: {obj.documentWidth}</p>
+          <p>height: {obj.height}</p>
+          <p>width: {obj.width}</p>
+          <p>screenHeight {screenHeight}</p>
+          <p>screenWidth {screenWidth}</p>
+        </Section>
+        <Section className='section section__2'>
+          <p>documentHeight: {obj.documentHeight}</p>
+          <p>documentWidth: {obj.documentWidth}</p>
+          <p>height: {obj.height}</p>
+          <p>width: {obj.width}</p>
+          <p>screenHeight {screenHeight}</p>
+          <p>screenWidth {screenWidth}</p>
+        </Section>
         <Section className='section section__3'>
           <Slider />
         </Section>
@@ -171,4 +193,6 @@ const getElementDimensions = (el) => {
 <p>documentHeight: {obj.documentHeight}</p>
           <p>documentWidth: {obj.documentWidth}</p>
           <p>height: {obj.height}</p>
-          <p>width: {obj.width}</p>*/
+          <p>width: {obj.width}</p>
+          
+          */
