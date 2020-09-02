@@ -14,8 +14,19 @@ import {
   SET_SLIDE,
   SET_OFFSET_SLIDES,
   SET_OFFSET_AXIS,
+  SET_SCREEN_DIMENSIONS,
 } from "./types";
 import initialState from "../reducers/mainInitState";
+
+// set Screen dimensions
+
+export const setScreenDimensions = () => ({
+  type: SET_SCREEN_DIMENSIONS,
+  payload: {
+    screenHeight: document.documentElement.clientHeight,
+    screenWidth: document.documentElement.clientWidth,
+  },
+});
 
 // press
 export const press = () => ({

@@ -14,6 +14,7 @@ import {
   SET_SLIDE,
   SET_OFFSET_SLIDES,
   SET_OFFSET_AXIS,
+  SET_SCREEN_DIMENSIONS,
 } from "../actions/types";
 import initialState from "./mainInitState";
 
@@ -21,6 +22,14 @@ export default (state = initialState, action) => {
   const { payload, type } = action;
 
   switch (type) {
+    case SET_SCREEN_DIMENSIONS:
+      console.log(payload);
+      return {
+        ...state,
+        screenHeight: payload.screenHeight,
+        screenWidth: payload.screenWidth,
+      };
+
     case PRESS:
       return {
         ...state,

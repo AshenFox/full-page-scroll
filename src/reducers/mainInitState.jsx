@@ -19,4 +19,7 @@ export default {
   offsetX: 0,
   offsetY: 0,
   isHorMovable: false,
+
+  screenHeight: 0,
+  screenWidth: 0,
 };

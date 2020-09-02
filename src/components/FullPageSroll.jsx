@@ -4,6 +4,7 @@ import Slider from "./Slider";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
+  setScreenDimensions,
   press,
   release,
   setPositions,
@@ -26,6 +27,7 @@ const FullPageSroll = ({
   setOffsetSections,
   setSection,
   resetY,
+  setScreenDimensions,
 }) => {
   const { isDown, contPosY, offsetY, offsetAxis, isHorMovable } = main;
 
@@ -61,12 +63,14 @@ const FullPageSroll = ({
 
   const resizeHandler = (e) => {
     console.log("resize!");
+    setScreenDimensions();
     setSection(section.current);
   };
 
   useEffect(() => {
     window.addEventListener("mousewheel", mouseWheelHandler);
     window.addEventListener("resize", resizeHandler);
+    setScreenDimensions();
     setSection(section.current);
 
     return () => {
@@ -81,7 +85,7 @@ const FullPageSroll = ({
       : `translate3D(0px, ${contPosY + offsetY}px, 0px)`,
   };
 
-  let obj = {
+  /* let obj = {
     documentHeight: document.documentElement.clientHeight,
     documentWidth: document.documentElement.clientWidth,
   };
@@ -90,7 +94,7 @@ const FullPageSroll = ({
       ...obj,
       ...getElementDimensions(section.current),
     };
-  }
+  } */
 
   return (
     <div
@@ -117,18 +121,8 @@ const FullPageSroll = ({
         ref={content}
         style={style}
       >
-        <Section className='section section__1' ref={section}>
-          <p>documentHeight: {obj.documentHeight}</p>
-          <p>documentWidth: {obj.documentWidth}</p>
-          <p>height: {obj.height}</p>
-          <p>width: {obj.width}</p>
-        </Section>
-        <Section className='section section__2'>
-          <p>documentHeight: {obj.documentHeight}</p>
-          <p>documentWidth: {obj.documentWidth}</p>
-          <p>height: {obj.height}</p>
-          <p>width: {obj.width}</p>
-        </Section>
+        <Section className='section section__1' ref={section}></Section>
+        <Section className='section section__2'></Section>
         <Section className='section section__3'>
           <Slider />
         </Section>
@@ -160,6 +154,7 @@ export default connect(mapStateToProps, {
   setOffsetSections,
   setSection,
   resetY,
+  setScreenDimensions,
 })(FullPageSroll);
 
 const getElementDimensions = (el) => {
@@ -170,3 +165,10 @@ const getElementDimensions = (el) => {
     height: parseInt(styles.getPropertyValue("height").replace(/px/, "")),
   };
 };
+
+/* 
+
+<p>documentHeight: {obj.documentHeight}</p>
+          <p>documentWidth: {obj.documentWidth}</p>
+          <p>height: {obj.height}</p>
+          <p>width: {obj.width}</p>*/
