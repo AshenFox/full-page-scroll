@@ -1,6 +1,6 @@
 export default {
   sectionsNumber: 3,
-  currentSection: 3,
+  currentSection: 1,
   offsetSections: 0,
 
   contPosY: 0,

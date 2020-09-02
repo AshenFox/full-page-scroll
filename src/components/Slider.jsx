@@ -16,7 +16,16 @@ const Slider = ({
   setOffsetSlides,
   setSlide,
 }) => {
-  const { offsetX, sliderPosX, offsetAxis, isDown, isHorMovable } = main;
+  const {
+    offsetX,
+    sliderPosX,
+    offsetAxis,
+    isDown,
+    isHorMovable,
+    screenWidth,
+    screenHeight,
+    slidesNumber,
+  } = main;
 
   const sliderItem = useRef(null);
 
@@ -48,7 +57,13 @@ const Slider = ({
     };
   }, []);
 
+  let dimensions = {
+    width: `${screenWidth * slidesNumber}px`,
+    height: `${screenHeight}px`,
+  };
+
   let style = {
+    ...dimensions,
     transform:
       offsetAxis === "verticle"
         ? `translate3D(${sliderPosX}px, 0px, 0px)`
@@ -71,9 +86,13 @@ const Slider = ({
         }`}
         style={style}
       >
-        <div className='slider-item slider-item__1' ref={sliderItem}></div>
-        <div className='slider-item slider-item__2'></div>
-        <div className='slider-item slider-item__3'></div>
+        <div
+          className='slider-item slider-item__1'
+          ref={sliderItem}
+          style={dimensions}
+        ></div>
+        <div className='slider-item slider-item__2' style={dimensions}></div>
+        <div className='slider-item slider-item__3' style={dimensions}></div>
       </div>
       <SliderControls />
     </div>

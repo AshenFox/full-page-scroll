@@ -136,15 +136,11 @@ body {
 }
 
 .slider-track {
-  width: 300%;
   display: flex;
   transition: none;
 }
 
 .slider-item {
-  height: 100vh;
-  width: 100%;
-  // transform: translateX(-100px);
   &__1 {
     background-color: orchid;
   }
