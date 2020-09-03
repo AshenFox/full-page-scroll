@@ -3,6 +3,8 @@ import {
   RELEASE,
   HOR_MOVABLE_PRESS,
   HOR_MOVABLE_RELEASE,
+  CONTROL_EL_PRESS,
+  CONTROL_EL_RELEASE,
   SET_POS,
   SET_CONT_POS,
   SET_OFFSETS,
@@ -23,7 +25,6 @@ export default (state = initialState, action) => {
 
   switch (type) {
     case SET_SCREEN_DIMENSIONS:
-      console.log(payload);
       return {
         ...state,
         screenHeight: payload.screenHeight,
@@ -52,6 +53,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isHorMovable: false,
+      };
+
+    case CONTROL_EL_PRESS:
+      return {
+        ...state,
+        isControlEl: true,
+      };
+
+    case CONTROL_EL_RELEASE:
+      return {
+        ...state,
+        isControlEl: false,
       };
 
     case SET_POS:

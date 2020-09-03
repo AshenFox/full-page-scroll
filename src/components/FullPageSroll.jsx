@@ -13,7 +13,7 @@ import {
   reset,
   setOffsetSections,
   setSection,
-  resetY,
+  setSlide,
 } from "../actions/mainActions";
 
 const FullPageSroll = ({
@@ -26,8 +26,8 @@ const FullPageSroll = ({
   reset,
   setOffsetSections,
   setSection,
-  resetY,
   setScreenDimensions,
+  setSlide,
 }) => {
   const {
     isDown,
@@ -37,10 +37,33 @@ const FullPageSroll = ({
     isHorMovable,
     screenHeight,
     screenWidth,
+    sectionsNumber,
+    currentSection,
   } = main;
 
+  const optionsArr = [];
+
+  const on = (e) => {
+    let optionNum = parseInt(e.target.dataset.optionNum);
+    setOffsetSections(optionNum - currentSection);
+    setSection();
+    reset();
+  };
+
+  for (let i = 1; i <= sectionsNumber; i++) {
+    optionsArr.push(
+      <div
+        key={i}
+        onClick={on}
+        className={`sections-controls__option ${
+          currentSection === i ? "active" : ""
+        }`}
+        data-option-num={i}
+      ></div>
+    );
+  }
+
   const content = useRef(null);
-  const section = useRef(null);
 
   const isHorInteraction = offsetAxis === "horizontal" && isHorMovable;
 
@@ -53,12 +76,12 @@ const FullPageSroll = ({
   const move = (x, y) => {
     if (!isDown) return;
     setOffsets(x, y);
-    if (!isHorInteraction) setOffsetSections(section.current);
+    if (!isHorInteraction) setOffsetSections();
   };
 
   const end = (e) => {
     release();
-    setSection(section.current);
+    setSection();
     reset();
   };
 
@@ -68,21 +91,23 @@ const FullPageSroll = ({
 
   const mouseWheelHandler = (e) => {
     let direction = e.deltaY * 0.01;
-    setOffsetSections(null, direction);
-    setSection(section.current);
+    setOffsetSections(direction);
+    setSection();
     reset();
   };
 
   const resizeHandler = (e) => {
     setScreenDimensions();
-    setSection(section.current);
+    setSection();
   };
 
   useEffect(() => {
+    setScreenDimensions();
+    setSection();
+    setSlide();
+
     window.addEventListener("mousewheel", mouseWheelHandler);
     window.addEventListener("resize", resizeHandler);
-    setScreenDimensions();
-    setSection(section.current);
 
     document.addEventListener("dragstart", prevent);
     document.addEventListener("drag", prevent);
@@ -106,12 +131,6 @@ const FullPageSroll = ({
     documentHeight: document.documentElement.clientHeight,
     documentWidth: document.documentElement.clientWidth,
   };
-  if (section.current) {
-    obj = {
-      ...obj,
-      ...getElementDimensions(section.current),
-    };
-  }
 
   //e.preventDefault(); end()
 
@@ -141,19 +160,15 @@ const FullPageSroll = ({
         ref={content}
         style={style}
       >
-        <Section className='section section__1' ref={section}>
+        <Section className='section section__1'>
           <p>documentHeight: {obj.documentHeight}</p>
           <p>documentWidth: {obj.documentWidth}</p>
-          <p>height: {obj.height}</p>
-          <p>width: {obj.width}</p>
           <p>screenHeight {screenHeight}</p>
           <p>screenWidth {screenWidth}</p>
         </Section>
         <Section className='section section__2'>
           <p>documentHeight: {obj.documentHeight}</p>
           <p>documentWidth: {obj.documentWidth}</p>
-          <p>height: {obj.height}</p>
-          <p>width: {obj.width}</p>
           <p>screenHeight {screenHeight}</p>
           <p>screenWidth {screenWidth}</p>
         </Section>
@@ -161,11 +176,7 @@ const FullPageSroll = ({
           <Slider />
         </Section>
       </main>
-      <div className='sections-controls'>
-        <div className='sections-controls__option'></div>
-        <div className='sections-controls__option'></div>
-        <div className='sections-controls__option'></div>
-      </div>
+      <div className='sections-controls'>{optionsArr}</div>
     </div>
   );
 };
@@ -187,24 +198,6 @@ export default connect(mapStateToProps, {
   reset,
   setOffsetSections,
   setSection,
-  resetY,
   setScreenDimensions,
+  setSlide,
 })(FullPageSroll);
-
-const getElementDimensions = (el) => {
-  let styles = window.getComputedStyle(el);
-
-  return {
-    width: parseInt(styles.getPropertyValue("width").replace(/px/, "")),
-    height: parseInt(styles.getPropertyValue("height").replace(/px/, "")),
-  };
-};
-
-/* 
-
-<p>documentHeight: {obj.documentHeight}</p>
-          <p>documentWidth: {obj.documentWidth}</p>
-          <p>height: {obj.height}</p>
-          <p>width: {obj.width}</p>
-          
-          */

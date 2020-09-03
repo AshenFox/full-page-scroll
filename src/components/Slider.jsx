@@ -25,9 +25,8 @@ const Slider = ({
     screenWidth,
     screenHeight,
     slidesNumber,
+    isControlEl,
   } = main;
-
-  const sliderItem = useRef(null);
 
   const start = (e) => {
     horMovablePress();
@@ -36,21 +35,22 @@ const Slider = ({
   const move = (e) => {
     if (!isDown) return;
     if (offsetAxis === "verticle") return;
-    setOffsetSlides(sliderItem.current);
+    if (isControlEl) return;
+
+    setOffsetSlides();
   };
 
   const end = (e) => {
     horMovableRelease();
-    setSlide(sliderItem.current);
+    setSlide();
   };
 
   const resizeHandler = (e) => {
-    setSlide(sliderItem.current);
+    setSlide();
   };
 
   useEffect(() => {
     window.addEventListener("resize", resizeHandler);
-    setSlide(sliderItem.current);
 
     return () => {
       window.addEventListener("resize", resizeHandler);
@@ -65,7 +65,7 @@ const Slider = ({
   let style = {
     ...dimensions,
     transform:
-      offsetAxis === "verticle"
+      offsetAxis === "verticle" || isControlEl
         ? `translate3D(${sliderPosX}px, 0px, 0px)`
         : `translate3D(${sliderPosX + offsetX}px, 0px, 0px)`,
   };
@@ -87,11 +87,7 @@ const Slider = ({
         }`}
         style={style}
       >
-        <div
-          className='slider-item slider-item__1'
-          ref={sliderItem}
-          style={dimensions}
-        ></div>
+        <div className='slider-item slider-item__1' style={dimensions}></div>
         <div className='slider-item slider-item__2' style={dimensions}></div>
         <div className='slider-item slider-item__3' style={dimensions}></div>
       </div>

@@ -3,6 +3,8 @@ import {
   RELEASE,
   HOR_MOVABLE_PRESS,
   HOR_MOVABLE_RELEASE,
+  CONTROL_EL_PRESS,
+  CONTROL_EL_RELEASE,
   SET_POS,
   SET_CONT_POS,
   SET_OFFSETS,
@@ -48,6 +50,17 @@ export const horMovablePress = () => ({
 
 export const horMovableRelease = () => ({
   type: HOR_MOVABLE_RELEASE,
+});
+
+// contr press
+export const controlElPress = () => ({
+  type: CONTROL_EL_PRESS,
+});
+
+// contr release
+
+export const controlElRelease = () => ({
+  type: CONTROL_EL_RELEASE,
 });
 
 // set positions of click/touch
@@ -125,7 +138,7 @@ export const setOffsetAxis = (offsetX, offsetY) => {
 
 // set offset section
 
-export const setOffsetSections = (el, value) => (dispatch, getState) => {
+export const setOffsetSections = (value) => (dispatch, getState) => {
   let offsetSections;
 
   if (value !== undefined) {
@@ -134,10 +147,15 @@ export const setOffsetSections = (el, value) => (dispatch, getState) => {
     offsetSections = 0;
 
     let {
-      main: { offsetY, offsetX },
+      main: { offsetY, offsetX, screenWidth, screenHeight },
     } = getState();
 
-    const { offsetIntY } = getOffsetInteger(el, offsetX, offsetY);
+    const { offsetIntY } = getOffsetInteger(
+      offsetX,
+      offsetY,
+      screenWidth,
+      screenHeight
+    );
 
     // console.log(offsetIntY);
     offsetSections = offsetIntY;
@@ -153,7 +171,7 @@ export const setOffsetSections = (el, value) => (dispatch, getState) => {
 
 // set offset slides
 
-export const setOffsetSlides = (el, value) => (dispatch, getState) => {
+export const setOffsetSlides = (value) => (dispatch, getState) => {
   let offsetSlides;
 
   if (value !== undefined) {
@@ -162,10 +180,15 @@ export const setOffsetSlides = (el, value) => (dispatch, getState) => {
     offsetSlides = 0;
 
     let {
-      main: { offsetX, offsetY },
+      main: { offsetX, offsetY, screenWidth, screenHeight },
     } = getState();
 
-    const { offsetIntX } = getOffsetInteger(el, offsetX, offsetY);
+    const { offsetIntX } = getOffsetInteger(
+      offsetX,
+      offsetY,
+      screenWidth,
+      screenHeight
+    );
     offsetSlides = offsetIntX;
   }
 
@@ -179,11 +202,10 @@ export const setOffsetSlides = (el, value) => (dispatch, getState) => {
 
 // set section
 
-export const setSection = (el) => (dispatch, getState) => {
+export const setSection = () => (dispatch, getState) => {
   let {
-    main: { sectionsNumber, currentSection, offsetSections },
+    main: { sectionsNumber, currentSection, offsetSections, screenHeight },
   } = getState();
-  let { height } = getElementDimensions(el);
 
   let newCurrentSection = currentSection + offsetSections;
 
@@ -194,18 +216,17 @@ export const setSection = (el) => (dispatch, getState) => {
     type: SET_SECTION,
     payload: {
       currentSection: newCurrentSection,
-      contPosY: height * (newCurrentSection - 1) * -1,
+      contPosY: screenHeight * (newCurrentSection - 1) * -1,
     },
   });
 };
 
 // set slide
 
-export const setSlide = (el) => (dispatch, getState) => {
+export const setSlide = () => (dispatch, getState) => {
   let {
-    main: { slidesNumber, currentSlide, offsetSlides },
+    main: { slidesNumber, currentSlide, offsetSlides, screenWidth },
   } = getState();
-  let { width } = getElementDimensions(el);
 
   let newCurrentSlide = currentSlide + offsetSlides;
 
@@ -216,7 +237,7 @@ export const setSlide = (el) => (dispatch, getState) => {
     type: SET_SLIDE,
     payload: {
       currentSlide: newCurrentSlide,
-      sliderPosX: width * (newCurrentSlide - 1) * -1,
+      sliderPosX: screenWidth * (newCurrentSlide - 1) * -1,
     },
   });
 };
@@ -253,7 +274,7 @@ const getTransformedPosition = (el) => {
 };
 
 // get an element's transformed position
-
+/* 
 const getElementDimensions = (el) => {
   let styles = window.getComputedStyle(el);
 
@@ -261,13 +282,11 @@ const getElementDimensions = (el) => {
     width: parseInt(styles.getPropertyValue("width").replace(/px/, "")),
     height: parseInt(styles.getPropertyValue("height").replace(/px/, "")),
   };
-};
+}; */
 
 // get offset integer
 
-const getOffsetInteger = (el, offsetX, offsetY) => {
-  let { height, width } = getElementDimensions(el);
-
+const getOffsetInteger = (offsetX, offsetY, width, height) => {
   let ratioX = Math.abs(offsetX) / width;
   let ratioY = Math.abs(offsetY) / height;
 
