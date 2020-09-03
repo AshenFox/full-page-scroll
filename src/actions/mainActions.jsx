@@ -105,7 +105,7 @@ export const setOffsetAxis = (offsetX, offsetY) => {
   let absOffsetX = Math.abs(offsetX);
   let absOffsetY = Math.abs(offsetY);
 
-  let limit = 25;
+  let limit = 10;
 
   if (absOffsetX > limit || absOffsetY > limit) {
     Math.abs(offsetX) / Math.abs(offsetY) > 1

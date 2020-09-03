@@ -79,6 +79,7 @@ const Slider = ({
       onTouchStart={start}
       onTouchMove={move}
       onTouchEnd={end}
+      onMouseOut={end}
     >
       <div
         className={`slider-track ${

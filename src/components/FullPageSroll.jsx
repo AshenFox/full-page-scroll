@@ -62,6 +62,10 @@ const FullPageSroll = ({
     reset();
   };
 
+  const prevent = (e) => {
+    e.preventDefault();
+  };
+
   const mouseWheelHandler = (e) => {
     let direction = e.deltaY * 0.01;
     setOffsetSections(null, direction);
@@ -70,7 +74,6 @@ const FullPageSroll = ({
   };
 
   const resizeHandler = (e) => {
-    console.log("resize!");
     setScreenDimensions();
     setSection(section.current);
   };
@@ -81,9 +84,15 @@ const FullPageSroll = ({
     setScreenDimensions();
     setSection(section.current);
 
+    document.addEventListener("dragstart", prevent);
+    document.addEventListener("drag", prevent);
+
     return () => {
       window.removeEventListener("mousewheel", mouseWheelHandler);
       window.addEventListener("resize", resizeHandler);
+
+      document.removeEventListener("dragstart", prevent);
+      document.removeEventListener("drag", prevent);
     };
   }, []);
 
@@ -104,6 +113,8 @@ const FullPageSroll = ({
     };
   }
 
+  //e.preventDefault(); end()
+
   return (
     <div
       className='container'
@@ -121,6 +132,7 @@ const FullPageSroll = ({
         move(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
       }}
       onTouchEnd={end}
+      onMouseOut={end}
     >
       <main
         className={`content ${
