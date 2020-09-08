@@ -1,16 +1,11 @@
 import {
   PRESS,
-  RELEASE,
   HOR_MOVABLE_PRESS,
-  HOR_MOVABLE_RELEASE,
   CONTROL_EL_PRESS,
-  CONTROL_EL_RELEASE,
+  RELEASE_ALL,
   SET_POS,
-  SET_CONT_POS,
   SET_OFFSETS,
   RESET,
-  RESET_X,
-  RESET_Y,
   SET_SECTION,
   SET_OFFSET_SECTIONS,
   SET_SLIDE,
@@ -37,22 +32,10 @@ export default (state = initialState, action) => {
         isDown: true,
       };
 
-    case RELEASE:
-      return {
-        ...state,
-        isDown: false,
-      };
-
     case HOR_MOVABLE_PRESS:
       return {
         ...state,
         isHorMovable: true,
-      };
-
-    case HOR_MOVABLE_RELEASE:
-      return {
-        ...state,
-        isHorMovable: false,
       };
 
     case CONTROL_EL_PRESS:
@@ -61,9 +44,11 @@ export default (state = initialState, action) => {
         isControlEl: true,
       };
 
-    case CONTROL_EL_RELEASE:
+    case RELEASE_ALL:
       return {
         ...state,
+        isDown: false,
+        isHorMovable: false,
         isControlEl: false,
       };
 
@@ -72,13 +57,6 @@ export default (state = initialState, action) => {
         ...state,
         posX: payload.posX,
         posY: payload.posY,
-      };
-
-    case SET_CONT_POS:
-      return {
-        ...state,
-        contPosX: payload.contPosX,
-        contPosY: payload.contPosY,
       };
 
     case SET_OFFSETS:
@@ -102,25 +80,10 @@ export default (state = initialState, action) => {
         offsetAxis: false,
       };
 
-    case RESET_X:
-      return {
-        ...state,
-        posX: 0,
-        offsetX: 0,
-      };
-
-    case RESET_Y:
-      return {
-        ...state,
-        posY: 0,
-        offsetY: 0,
-      };
-
     case SET_SECTION:
       return {
         ...state,
         currentSection: payload.currentSection,
-        contPosY: payload.contPosY,
       };
 
     case SET_OFFSET_SECTIONS:
@@ -133,7 +96,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentSlide: payload.currentSlide,
-        sliderPosX: payload.sliderPosX,
       };
 
     case SET_OFFSET_SLIDES:

@@ -6,32 +6,29 @@ import { connect } from "react-redux";
 import {
   setScreenDimensions,
   press,
-  release,
   setPositions,
-  setContentPositions,
   setOffsets,
   reset,
   setOffsetSections,
   setSection,
   setSlide,
+  releaseAll,
 } from "../actions/mainActions";
 
 const FullPageSroll = ({
   main,
   press,
-  release,
   setPositions,
-  setContentPositions,
   setOffsets,
   reset,
   setOffsetSections,
   setSection,
   setScreenDimensions,
   setSlide,
+  releaseAll,
 }) => {
   const {
     isDown,
-    contPosY,
     offsetY,
     offsetAxis,
     isHorMovable,
@@ -39,9 +36,14 @@ const FullPageSroll = ({
     screenWidth,
     sectionsNumber,
     currentSection,
+    isControlEl,
   } = main;
 
   const optionsArr = [];
+
+  const posY = useRef(0);
+
+  posY.current = screenHeight * (currentSection - 1) * -1;
 
   const on = (e) => {
     let optionNum = parseInt(e.target.dataset.optionNum);
@@ -63,24 +65,22 @@ const FullPageSroll = ({
     );
   }
 
-  const content = useRef(null);
-
-  const isHorInteraction = offsetAxis === "horizontal" && isHorMovable;
+  const isHorStatic =
+    (offsetAxis === "horizontal" && isHorMovable) || isControlEl;
 
   const start = (x, y) => {
     press();
-    setContentPositions(content.current);
     setPositions(x, y);
   };
 
   const move = (x, y) => {
     if (!isDown) return;
     setOffsets(x, y);
-    if (!isHorInteraction) setOffsetSections();
+    if (!isHorStatic) setOffsetSections();
   };
 
   const end = (e) => {
-    release();
+    releaseAll();
     setSection();
     reset();
   };
@@ -109,6 +109,8 @@ const FullPageSroll = ({
     window.addEventListener("mousewheel", mouseWheelHandler);
     window.addEventListener("resize", resizeHandler);
 
+    document.body.addEventListener("mouseleave", end);
+
     document.addEventListener("dragstart", prevent);
     document.addEventListener("drag", prevent);
 
@@ -122,17 +124,10 @@ const FullPageSroll = ({
   }, []);
 
   let style = {
-    transform: isHorInteraction
-      ? `translate3D(0px, ${contPosY}px, 0px)`
-      : `translate3D(0px, ${contPosY + offsetY}px, 0px)`,
+    transform: isHorStatic
+      ? `translate3D(0px, ${posY.current}px, 0px)`
+      : `translate3D(0px, ${posY.current + offsetY}px, 0px)`,
   };
-
-  let obj = {
-    documentHeight: document.documentElement.clientHeight,
-    documentWidth: document.documentElement.clientWidth,
-  };
-
-  //e.preventDefault(); end()
 
   return (
     <div
@@ -151,28 +146,14 @@ const FullPageSroll = ({
         move(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
       }}
       onTouchEnd={end}
-      onMouseOut={end}
     >
       <main
-        className={`content ${
-          !isDown || isHorInteraction ? "transitioned" : ""
-        }`}
-        ref={content}
+        className={`content ${!isDown || isHorStatic ? "transitioned" : ""}`}
         style={style}
       >
-        <Section className='section section__1'>
-          <p>documentHeight: {obj.documentHeight}</p>
-          <p>documentWidth: {obj.documentWidth}</p>
-          <p>screenHeight {screenHeight}</p>
-          <p>screenWidth {screenWidth}</p>
-        </Section>
-        <Section className='section section__2'>
-          <p>documentHeight: {obj.documentHeight}</p>
-          <p>documentWidth: {obj.documentWidth}</p>
-          <p>screenHeight {screenHeight}</p>
-          <p>screenWidth {screenWidth}</p>
-        </Section>
-        <Section className='section section__3'>
+        <Section number={1} />
+        <Section number={2} />
+        <Section number={3}>
           <Slider />
         </Section>
       </main>
@@ -191,13 +172,12 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   press,
-  release,
   setPositions,
-  setContentPositions,
   setOffsets,
   reset,
   setOffsetSections,
   setSection,
   setScreenDimensions,
   setSlide,
+  releaseAll,
 })(FullPageSroll);

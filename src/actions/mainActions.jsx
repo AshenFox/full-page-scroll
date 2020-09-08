@@ -1,16 +1,11 @@
 import {
   PRESS,
-  RELEASE,
   HOR_MOVABLE_PRESS,
-  HOR_MOVABLE_RELEASE,
   CONTROL_EL_PRESS,
-  CONTROL_EL_RELEASE,
+  RELEASE_ALL,
   SET_POS,
-  SET_CONT_POS,
   SET_OFFSETS,
   RESET,
-  RESET_X,
-  RESET_Y,
   SET_SECTION,
   SET_OFFSET_SECTIONS,
   SET_SLIDE,
@@ -35,21 +30,9 @@ export const press = () => ({
   type: PRESS,
 });
 
-// release
-
-export const release = () => ({
-  type: RELEASE,
-});
-
 // hor press
 export const horMovablePress = () => ({
   type: HOR_MOVABLE_PRESS,
-});
-
-// hor release
-
-export const horMovableRelease = () => ({
-  type: HOR_MOVABLE_RELEASE,
 });
 
 // contr press
@@ -57,10 +40,10 @@ export const controlElPress = () => ({
   type: CONTROL_EL_PRESS,
 });
 
-// contr release
+// release all
 
-export const controlElRelease = () => ({
-  type: CONTROL_EL_RELEASE,
+export const releaseAll = () => ({
+  type: RELEASE_ALL,
 });
 
 // set positions of click/touch
@@ -72,20 +55,6 @@ export const setPositions = (posX, posY) => ({
     posY,
   },
 });
-
-// set positions of content
-
-export const setContentPositions = (el) => {
-  const { x, y } = getTransformedPosition(el);
-
-  return {
-    type: SET_CONT_POS,
-    payload: {
-      contPosX: x,
-      contPosY: y,
-    },
-  };
-};
 
 // set offsets
 
@@ -204,7 +173,7 @@ export const setOffsetSlides = (value) => (dispatch, getState) => {
 
 export const setSection = () => (dispatch, getState) => {
   let {
-    main: { sectionsNumber, currentSection, offsetSections, screenHeight },
+    main: { sectionsNumber, currentSection, offsetSections },
   } = getState();
 
   let newCurrentSection = currentSection + offsetSections;
@@ -216,28 +185,32 @@ export const setSection = () => (dispatch, getState) => {
     type: SET_SECTION,
     payload: {
       currentSection: newCurrentSection,
-      contPosY: screenHeight * (newCurrentSection - 1) * -1,
     },
   });
 };
 
 // set slide
 
-export const setSlide = () => (dispatch, getState) => {
-  let {
-    main: { slidesNumber, currentSlide, offsetSlides, screenWidth },
-  } = getState();
+export const setSlide = (value) => (dispatch, getState) => {
+  let newCurrentSlide;
 
-  let newCurrentSlide = currentSlide + offsetSlides;
+  if (value) {
+    newCurrentSlide = value;
+  } else {
+    let {
+      main: { slidesNumber, currentSlide, offsetSlides },
+    } = getState();
 
-  if (newCurrentSlide < 1) newCurrentSlide = 1;
-  if (newCurrentSlide > slidesNumber) newCurrentSlide = slidesNumber;
+    newCurrentSlide = currentSlide + offsetSlides;
+
+    if (newCurrentSlide < 1) newCurrentSlide = 1;
+    if (newCurrentSlide > slidesNumber) newCurrentSlide = slidesNumber;
+  }
 
   dispatch({
     type: SET_SLIDE,
     payload: {
       currentSlide: newCurrentSlide,
-      sliderPosX: screenWidth * (newCurrentSlide - 1) * -1,
     },
   });
 };
@@ -248,41 +221,7 @@ export const reset = () => ({
   type: RESET,
 });
 
-// reset positions and offsets x
-export const resetX = () => ({
-  type: RESET_X,
-});
-
-// reset positions and offsets y
-export const resetY = () => ({
-  type: RESET_Y,
-});
-
 // Suplemental functions
-
-// Get an element's transformed position
-
-const getTransformedPosition = (el) => {
-  let matrixData = new WebKitCSSMatrix(
-    window.getComputedStyle(el).webkitTransform
-  );
-
-  return {
-    x: matrixData.m41,
-    y: matrixData.m42,
-  };
-};
-
-// get an element's transformed position
-/* 
-const getElementDimensions = (el) => {
-  let styles = window.getComputedStyle(el);
-
-  return {
-    width: parseInt(styles.getPropertyValue("width").replace(/px/, "")),
-    height: parseInt(styles.getPropertyValue("height").replace(/px/, "")),
-  };
-}; */
 
 // get offset integer
 
